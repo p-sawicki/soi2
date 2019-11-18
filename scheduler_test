@@ -1,0 +1,30 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <lib.h>
+#include <minix/type.h>
+#include <time.h>
+int main(int argc, char *argv[]){
+	time_t start;
+	message msg;
+	unsigned i, j;
+	char *type;
+	pid_t pid = getpid();
+	if(argc < 2)
+		return 1;
+	msg.m1_i1 = pid;
+	msg.m2_i2 = atoi(argv[1]);
+	if(msg.m2_i2 == 1)
+		type = "massive I/0";
+	else if(msg.m2_i2 == 3)
+		type = "numeric";
+	else if(msg.m2_i2 == 7)
+		type = "interactive";
+	else
+		type = "custom";
+	_syscall(MM, 79, &msg);
+	start = time(NULL);
+	printf("Process %d (%s) started on %s\n", pid, type, asctime(gmtime(&start)));
+	while(TRUE);
+}

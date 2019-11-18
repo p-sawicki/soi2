@@ -1,0 +1,9 @@
+#!/bin/sh
+current=$1
+end=$2
+while `expr $current != $end`
+do
+kill $current
+current=`expr $current + 1`
+done
+
